@@ -1,5 +1,5 @@
 
-const CACHE_NAME = 'iron-knees-merged-v1';
+const CACHE_NAME = 'iron-knees-merged-v2';
 const ASSETS = [
   '/ironknees/',
   '/ironknees/index.html',
