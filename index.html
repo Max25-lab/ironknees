@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="IRON Knees — Programa de 4 semanas para recuperación y fortalecimiento de rodilla con seguimiento de progreso, nutrición y suplementos.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IRON Knees</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #2a2a2a 100%);
+            min-height: 100vh;
+            padding: 15px;
+            color: #e0e0e0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: linear-gradient(145deg, #1c1c1c, #252525);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.05);
+            border: 1px solid #2a2a2a;
+        }
+
+        h1 {
+            color: #ffffff;
+            font-size: 24px;
+            margin-bottom: 5px;
+            text-shadow: 0 2px 10px rgba(220, 38, 38, 0.3);
+        }
+
+        .subtitle {
+            color: #9ca3af;
+            font-size: 13px;
+            margin-bottom: 12px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .stat-box {
+            background: #141414;
+            padding: 12px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid #2a2a2a;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .stat-number {
+            font-size: 22px;
+            font-weight: 700;
+            color: #dc2626;
+            text-shadow: 0 0 10px rgba(220, 38, 38, 0.5);
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: #9ca3af;
+            margin-top: 3px;
+        }
+
+        .progress-bar {
+            background: #0a0a0a;
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            border: 1px solid #2a2a2a;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #dc2626, #ef4444);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+            box-shadow: 0 0 10px rgba(220, 38, 38, 0.6);
+        }
+
+        .week-selector {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+            overflow-x: auto;
+            padding: 3px;
+        }
+
+        .week-btn {
+            background: #1c1c1c;
+            border: 2px solid #3a3a3a;
+            padding: 10px 18px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            color: #d1d5db;
+            white-space: nowrap;
+            transition: all 0.3s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+        }
+
+        .week-btn:hover {
+            border-color: #dc2626;
+            box-shadow: 0 0 15px rgba(220, 38, 38, 0.3);
+        }
+
+        .week-btn.active {
+            background: linear-gradient(135deg, #dc2626, #991b1b);
+            color: white;
+            border-color: #dc2626;
+            box-shadow: 0 4px 15px rgba(220, 38, 38, 0.4);
+        }
+
+        .week-info {
+            background: linear-gradient(145deg, #1c1c1c, #252525);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            border: 1px solid #2a2a2a;
+            border-left: 4px solid #dc2626;
+        }
+
+        .week-info h2 {
+            color: #ffffff;
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .week-info p {
+            color: #9ca3af;
+            line-height: 1.5;
+            font-size: 13px;
+        }
+
+        .day-card {
+            background: linear-gradient(145deg, #1c1c1c, #252525);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            border: 1px solid #2a2a2a;
+        }
+
+        .day-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            padding: 8px;
+            background: #141414;
+            border-radius: 8px;
+            border: 1px solid #2a2a2a;
+            transition: all 0.3s;
+        }
+
+        .day-header:hover {
+            background: #1a1a1a;
+            border-color: #3a3a3a;
+        }
+
+        .day-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .day-icon {
+            font-size: 20px;
+            color: #9ca3af;
+            transition: transform 0.3s;
+        }
+
+        .day-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .day-content.open {
+            max-height: 6000px;
+        }
+
+        .section-tabs {
+            display: flex;
+            gap: 8px;
+            margin: 15px 0 10px 0;
+            flex-wrap: wrap;
+        }
+
+        .section-tab {
+            background: #0f0f0f;
+            border: 2px solid #3a3a3a;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 12px;
+            color: #9ca3af;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .section-tab:hover {
+            border-color: #dc2626;
+            color: #dc2626;
+        }
+
+        .section-tab.active {
+            background: #dc2626;
+            color: white;
+            border-color: #dc2626;
+            box-shadow: 0 0 10px rgba(220, 38, 38, 0.4);
+        }
+
+        .section-content {
+            display: none;
+            margin-top: 10px;
+        }
+
+        .section-content.active {
+            display: block;
+        }
+
+        .exercise-item {
+            margin: 8px 0;
+            background: #0f0f0f;
+            border-radius: 8px;
+            border-left: 3px solid #4a4a4a;
+            overflow: hidden;
+            border: 1px solid #2a2a2a;
+            border-left: 3px solid #4a4a4a;
+            transition: all 0.3s;
+        }
+
+        .exercise-item:hover {
+            border-left-color: #dc2626;
+            box-shadow: 0 2px 10px rgba(220, 38, 38, 0.2);
+        }
+
+        .exercise-header {
+            display: flex;
+            align-items: flex-start;
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .checkbox {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            cursor: pointer;
+            flex-shrink: 0;
+            margin-top: 2px;
+            accent-color: #dc2626;
+        }
+
+        .exercise-text {
+            flex: 1;
+            line-height: 1.4;
+            font-size: 13px;
+            font-weight: 500;
+            color: #d1d5db;
+        }
+
+        .expand-icon {
+            font-size: 16px;
+            color: #6b7280;
+            transition: all 0.3s;
+            margin-left: 8px;
+        }
+
+        .exercise-item:hover .expand-icon {
+            color: #dc2626;
+        }
+
+        .exercise-desc {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            background: #0a0a0a;
+        }
+
+        .exercise-desc.open {
+            max-height: 500px;
+        }
+
+        .exercise-desc-content {
+            padding: 10px 15px 15px 45px;
+            font-size: 12px;
+            color: #9ca3af;
+            line-height: 1.6;
+            border-top: 1px solid #2a2a2a;
+        }
+
+        .desc-label {
+            font-weight: 600;
+            color: #dc2626;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 0.5px;
+        }
+
+        .nutrition-section {
+            background: #0f0f0f;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            border: 1px solid #2a2a2a;
+        }
+
+        .nutrition-time {
+            color: #dc2626;
+            font-weight: 700;
+            font-size: 14px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nutrition-time .checkbox {
+            margin-right: 5px;
+        }
+
+        .nutrition-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            font-size: 13px;
+            color: #d1d5db;
+            border-bottom: 1px solid #1a1a1a;
+        }
+
+        .nutrition-item:last-child {
+            border-bottom: none;
+        }
+
+        .nutrition-food {
+            color: #9ca3af;
+        }
+
+        .nutrition-cal {
+            color: #6b7280;
+            font-size: 12px;
+        }
+
+        .nutrition-total {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 2px solid #dc2626;
+            font-weight: 700;
+            color: #ffffff;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .supplement-list {
+            list-style: none;
+        }
+
+        .supplement-item {
+            background: #0f0f0f;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 6px;
+            border-left: 3px solid #dc2626;
+            color: #d1d5db;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .supplement-item .checkbox {
+            margin-right: 5px;
+        }
+
+        .supplement-icon {
+            font-size: 18px;
+        }
+
+        .notes-area {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #2a2a2a;
+            border-radius: 6px;
+            margin-top: 10px;
+            font-family: inherit;
+            font-size: 13px;
+            resize: vertical;
+            min-height: 50px;
+            background: #0f0f0f;
+            color: #d1d5db;
+        }
+
+        .notes-area:focus {
+            outline: none;
+            border-color: #dc2626;
+            box-shadow: 0 0 10px rgba(220, 38, 38, 0.3);
+        }
+
+        .week-notes {
+            background: linear-gradient(145deg, #1c1c1c, #252525);
+            padding: 12px;
+            border-radius: 10px;
+            margin-top: 15px;
+            border: 1px solid #2a2a2a;
+            border-left: 4px solid #dc2626;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+        }
+
+        .week-notes strong {
+            font-size: 14px;
+            color: #ffffff;
+        }
+
+        .week-notes textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #3a3a3a;
+            border-radius: 5px;
+            margin-top: 8px;
+            font-family: inherit;
+            font-size: 13px;
+            min-height: 60px;
+            background: #0f0f0f;
+            color: #d1d5db;
+        }
+
+        .week-notes textarea:focus {
+            outline: none;
+            border-color: #dc2626;
+            box-shadow: 0 0 10px rgba(220, 38, 38, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>IRON Knees</h1>
+            <div class="subtitle">Programa de 4 semanas</div>
+            <div class="stats">
+                <div class="stat-box">
+                    <div class="stat-number" id="completedCount">0</div>
+                    <div class="stat-label">Ejercicios Completados</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number" id="progressPercent">0%</div>
+                    <div class="stat-label">Progreso Semanal</div>
+                </div>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressBar"></div>
+            </div>
+        </div>
+
+        <div class="week-selector" id="weekSelector"></div>
+        <div id="weekContent"></div>
+    </div>
+
+    <script>
+        const nutritionData = {
+            1: { // Lunes - Día 1
+                meals: [
+                    { time: "11:00", cal: 807, items: [
+                        { food: "Pollo pechuga 150g", cal: 248 },
+                        { food: "Arroz integral 200g", cal: 222 },
+                        { food: "Banano 1 mediano", cal: 105 },
+                        { food: "Aguacate 70g", cal: 112 },
+                        { food: "Ensalada + aceite 1 cda", cal: 120 }
+                    ]},
+                    { time: "13:00", cal: 652, items: [
+                        { food: "Atún al natural 180g", cal: 238 },
+                        { food: "Mote 180g", cal: 212 },
+                        { food: "Ensalada + aceite 1 cda", cal: 120 },
+                        { food: "Piña 1 taza", cal: 82 }
+                    ]},
+                    { time: "16:00", cal: 350, items: [
+                        { food: "Leche descremada 300ml", cal: 105 },
+                        { food: "Frutos secos 25g", cal: 150 },
+                        { food: "Manzana 1", cal: 95 }
+                    ]},
+                    { time: "19:00", cal: 321, items: [
+                        { food: "1 huevo + 4 claras", cal: 138 },
+                        { food: "Chochos 120g", cal: 143 },
+                        { food: "Salteado + aceite 1 cdita", cal: 40 }
+                    ]}
+                ],
+                total: 2130,
+                note: "Ajuste: +100-150g arroz cocido para ~2,240 kcal"
+            },
+            2: { // Martes - Día 2
+                meals: [
+                    { time: "11:00", cal: 582, items: [
+                        { food: "Atún 180g", cal: 238 },
+                        { food: "Arroz integral 220g", cal: 244 },
+                        { food: "Aguacate 50g", cal: 80 },
+                        { food: "Tomate/cebolla/lechuga", cal: 20 }
+                    ]},
+                    { time: "13:00", cal: 648, items: [
+                        { food: "Pollo 160g", cal: 264 },
+                        { food: "Plátano verde cocido 180g", cal: 209 },
+                        { food: "Ensalada + aceite 1 cda", cal: 120 },
+                        { food: "Papaya 1 taza", cal: 55 }
+                    ]},
+                    { time: "16:00", cal: 395, items: [
+                        { food: "Leche descremada 300ml", cal: 105 },
+                        { food: "Pan integral 2 rebanadas", cal: 140 },
+                        { food: "Maíz tostado 30g", cal: 150 }
+                    ]},
+                    { time: "19:00", cal: 442, items: [
+                        { food: "Atún 180g", cal: 238 },
+                        { food: "Garbanzo 100g", cal: 164 },
+                        { food: "Verduras + aceite 1 cdita", cal: 40 }
+                    ]}
+                ],
+                total: 2067,
+                note: "Ajuste: +200g arroz cocido para ~2,240 kcal"
+            },
+            3: { // Miércoles - Día 3
+                meals: [
+                    { time: "11:00", cal: 326, items: [
+                        { food: "Encebollado (albacora 120g + yuca 150g)", cal: 326 }
+                    ]},
+                    { time: "13:00", cal: 659, items: [
+                        { food: "Pollo 180g", cal: 297 },
+                        { food: "Quinua 150g", cal: 180 },
+                        { food: "Ensalada + aceite 1 cda", cal: 120 },
+                        { food: "Naranja 1", cal: 62 }
+                    ]},
+                    { time: "16:00", cal: 323, items: [
+                        { food: "Leche descremada 300ml", cal: 105 },
+                        { food: "Frutos rojos 1 taza", cal: 64 },
+                        { food: "Frutos secos 20g", cal: 120 },
+                        { food: "Claras 2", cal: 34 }
+                    ]},
+                    { time: "19:00", cal: 338, items: [
+                        { food: "1 huevo + 5 claras", cal: 155 },
+                        { food: "Chochos 120g", cal: 143 },
+                        { food: "Ensalada + aceite 1 cdita", cal: 40 }
+                    ]}
+                ],
+                total: 1646,
+                note: "Ajuste: +200-250g arroz o 1 camote mediano"
+            },
+            4: { // Jueves - Día 4
+                meals: [
+                    { time: "11:00", cal: 717, items: [
+                        { food: "Pollo 150g", cal: 248 },
+                        { food: "Arroz integral 220g", cal: 244 },
+                        { food: "Banano 1", cal: 105 },
+                        { food: "Ensalada + aceite 1 cda", cal: 120 }
+                    ]},
+                    { time: "13:00", cal: 537, items: [
+                        { food: "Res magra 150g", cal: 263 },
+                        { food: "Lenteja 120g", cal: 139 },
+                        { food: "Ensalada + aceite 1 cdita", cal: 40 },
+                        { food: "Manzana 1", cal: 95 }
+                    ]},
+                    { time: "16:00", cal: 419, items: [
+                        { food: "Leche descremada 300ml", cal: 105 },
+                        { food: "Claras 2", cal: 34 },
+                        { food: "Tostada integral 1", cal: 70 },
+                        { food: "Maní 10g", cal: 60 },
+                        { food: "Maíz tostado 30g", cal: 150 }
+                    ]},
+                    { time: "19:00", cal: 386, items: [
+                        { food: "Atún 180g", cal: 238 },
+                        { food: "Aguacate 80g", cal: 128 },
+                        { food: "Verduras al vapor", cal: 20 }
+                    ]}
+                ],
+                total: 2059,
+                note: "Ajuste: +200g mote o +150g camote"
+            },
+            5: { // Viernes - Día 5
+                meals: [
+                    { time: "11:00", cal: 655, items: [
+                        { food: "Atún 2 latas (240g)", cal: 317 },
+                        { food: "Arroz integral 200g", cal: 222 },
+                        { food: "Aguacate 60g", cal: 96 },
+                        { food: "Ensalada", cal: 20 }
+                    ]},
+                    { time: "13:00", cal: 639, items: [
+                        { food: "Pollo 150g", cal: 248 },
+                        { food: "Camote 220g", cal: 189 },
+                        { food: "Ensalada + aceite 1 cda", cal: 120 },
+                        { food: "Piña 1 taza", cal: 82 }
+                    ]},
+                    { time: "16:00", cal: 268, items: [
+                        { food: "Leche descremada 300ml", cal: 105 },
+                        { food: "Pan integral 1 rebanada", cal: 70 },
+                        { food: "Canguil 3 tazas", cal: 93 }
+                    ]},
+                    { time: "19:00", cal: 345, items: [
+                        { food: "1 huevo + 4 claras", cal: 138 },
+                        { food: "Chochos 120g", cal: 143 },
+                        { food: "Ensalada + aceite 1 cdita", cal: 40 },
+                        { food: "Tomate/cebolla/limón", cal: 24 }
+                    ]}
+                ],
+                total: 1907,
+                note: "Ajuste: +1 fruta y/o +100g quinua cocida"
+            },
+            6: { // Sábado - Día 6
+                meals: [
+                    { time: "11:00", cal: 944, items: [
+                        { food: "Pollo 170g", cal: 281 },
+                        { food: "Arroz integral 410g (260+150)", cal: 456 },
+                        { food: "Banano 1", cal: 105 },
+                        { food: "Ensalada + aceite 1 cda", cal: 120 },
+                        { food: "Maíz tostado 30g", cal: 150 }
+                    ]},
+                    { time: "13:00", cal: 485, items: [
+                        { food: "Encebollado (albacora 120g + yuca 150g)", cal: 326 },
+                        { food: "+½ lata atún 60g (opcional)", cal: 79 },
+                        { food: "Mandarina 1", cal: 80 }
+                    ]},
+                    { time: "16:00", cal: 335, items: [
+                        { food: "Leche descremada 300ml", cal: 105 },
+                        { food: "Tostadas integrales 2", cal: 140 },
+                        { food: "Mantequilla de maní 15g", cal: 90 }
+                    ]},
+                    { time: "19:00", cal: 367, items: [
+                        { food: "Chochos 150g", cal: 179 },
+                        { food: "Tomate/cebolla/limón", cal: 20 },
+                        { food: "Aguacate 80g", cal: 128 },
+                        { food: "Verduras + aceite 1 cdita", cal: 40 }
+                    ]}
+                ],
+                total: 2608,
+                note: "Bici 75' Z2 - Objetivo: 2,450-2,650 kcal"
+            },
+            0: { // Domingo - Día 7
+                meals: [
+                    { time: "11:00", cal: 392, items: [
+                        { food: "1 huevo + 5 claras", cal: 155 },
+                        { food: "Arroz integral 120g", cal: 133 },
+                        { food: "Ensalada + aceite 1 cdita", cal: 40 },
+                        { food: "Cítrico 1", cal: 62 }
+                    ]},
+                    { time: "13:00", cal: 516, items: [
+                        { food: "Pollo 160g", cal: 264 },
+                        { food: "Garbanzo 120g", cal: 197 },
+                        { food: "Ensalada + aceite 1 cdita", cal: 40 },
+                        { food: "Pepino/tomate extra", cal: 15 }
+                    ]},
+                    { time: "16:00", cal: 271, items: [
+                        { food: "Leche descremada 300ml", cal: 105 },
+                        { food: "Frutos rojos 1 taza", cal: 64 },
+                        { food: "Claras 2", cal: 34 },
+                        { food: "Canguil 1.5 tazas", cal: 68 }
+                    ]},
+                    { time: "19:00", cal: 378, items: [
+                        { food: "Atún 180g", cal: 238 },
+                        { food: "Verduras + aguacate 50g", cal: 80 },
+                        { food: "Aceite 1 cdita", cal: 40 },
+                        { food: "Ensalada con limón", cal: 20 }
+                    ]}
+                ],
+                total: 1557,
+                note: "Descanso - Objetivo: 1,800-2,050 kcal"
+            }
+        };
+
+        const exerciseDescriptions = {
+            "elevacion": "Acostado boca arriba, elevar la pierna recta ~30 cm manteniendo la rodilla extendida. Fortalece el cuádriceps sin cargar la articulación.",
+            "puente": "Acostado boca arriba con rodillas flexionadas, elevar cadera formando línea recta hombros-caderas-rodillas, apretando glúteos.",
+            "clamshell": "De lado, rodillas flexionadas a 90°, abrir la rodilla superior separando las piernas (como una almeja) y volver a cerrar.",
+            "movilidad": "Ejercicios suaves de flexión/extensión de rodilla y estiramientos. Mantener cada estiramiento ~30 segundos.",
+            "cardio": "Caminata suave o bicicleta estática a ritmo muy ligero (Zona 1), para promover circulación sin dolor.",
+            "sentadillas": "De pie, realizar media sentadilla bajando según lo indicado y subiendo lento. Rodillas alineadas con pies, espalda recta, peso en talones.",
+            "step-up": "Subir a un escalón bajo con la pierna afectada primero, luego la otra, y bajar controlando.",
+            "balance": "De pie, mantener el equilibrio sobre la pierna de apoyo. Core activo. Trabajar la propiocepción y estabilidad articular.",
+            "plancha frontal": "Apoyando antebrazos, mantener cuerpo alineado cabeza-espalda-cadera. Fortalece core para estabilizar la rodilla.",
+            "plancha lateral": "En posición de lado apoyando antebrazo, elevar cadera y mantener. Fortalece core lateral.",
+            "desplazamiento": "Dar un paso lateral amplio manteniendo semiflexión de rodillas. Mejora equilibrio en movimientos laterales.",
+            "balanza": "Inclinar el torso hacia adelante levantando una pierna atrás, mantener 2-3 segundos. Equilibrio y fuerza de cadena posterior.",
+            "caminar linea": "Caminata en línea recta colocando un pie directamente delante del otro. Desafía el equilibrio dinámico.",
+            "circuito": "Combinar varios elementos de equilibrio en secuencia. Desafía control en diferentes situaciones.",
+            "evaluacion": "Probar capacidades tras 4 semanas: sentadilla completa, caminar 30 minutos, subir escaleras.",
+            "descanso": "Día de recuperación. Actividad muy suave opcional."
+        };
+
+        function getDescription(exerciseName) {
+            const name = exerciseName.toLowerCase();
+            if (name.includes("elevación") || name.includes("elevacion")) return exerciseDescriptions.elevacion;
+            if (name.includes("puente")) return exerciseDescriptions.puente;
+            if (name.includes("clamshell")) return exerciseDescriptions.clamshell;
+            if (name.includes("movilidad")) return exerciseDescriptions.movilidad;
+            if (name.includes("cardio")) return exerciseDescriptions.cardio;
+            if (name.includes("sentadilla")) return exerciseDescriptions.sentadillas;
+            if (name.includes("step-up") || name.includes("step")) return exerciseDescriptions["step-up"];
+            if (name.includes("balance") || name.includes("equilibrio")) return exerciseDescriptions.balance;
+            if (name.includes("plancha frontal")) return exerciseDescriptions["plancha frontal"];
+            if (name.includes("plancha lateral")) return exerciseDescriptions["plancha lateral"];
+            if (name.includes("desplazamiento")) return exerciseDescriptions.desplazamiento;
+            if (name.includes("balanza")) return exerciseDescriptions.balanza;
+            if (name.includes("caminar") && name.includes("línea")) return exerciseDescriptions["caminar linea"];
+            if (name.includes("circuito")) return exerciseDescriptions.circuito;
+            if (name.includes("evaluación") || name.includes("evaluacion")) return exerciseDescriptions.evaluacion;
+            if (name.includes("descanso")) return exerciseDescriptions.descanso;
+            return "Realizar según las indicaciones del fisioterapeuta, manteniendo siempre una buena técnica y sin dolor.";
+        }
+
+        const weekData = {
+            1: {
+                info: {
+                    title: "Semana 1 – Activación y Movilidad Inicial",
+                    desc: "Activación suave de los músculos y mejora de la movilidad. Sentadillas a medio recorrido (~45°) y cardio muy ligero."
+                },
+                days: {
+                    lunes: ["Elevación pierna recta (3x10)", "Puente de glúteos (3x10)", "Clamshell (2x12/lado)", "Movilidad (10 min)", "Cardio Z1 (15 min)"],
+                    martes: ["Sentadillas parciales (3x10, ~45°)", "Step-up (3x10/pierna)", "Balance a una pierna (3x30s)", "Movilidad (10 min)", "Cardio Z1 (15 min)"],
+                    miercoles: ["Elevación pierna recta (3x10)", "Puente glúteos (3x10, mantener 2-3s)", "Clamshell (2x15/lado)", "Plancha frontal (3x20s)", "Movilidad (5-10 min)", "Cardio Z1 (15 min)"],
+                    jueves: ["Sentadillas parciales (3x12)", "Step-up (3x10/pierna)", "Balance apoyo reducido (3x30s)", "Plancha lateral (2x15-20s/lado)", "Movilidad (10 min)", "Cardio Z1 (15-20 min)"],
+                    viernes: ["Elevación pierna recta (3x12)", "Puente glúteos (3x12)", "Clamshell (3x15/lado)", "Movilidad (5 min)", "Cardio Z1 (15 min)"],
+                    sabado: ["Sentadillas parciales (3x12)", "Step-up (3x12/pierna)", "Caminar en línea (opcional)", "Movilidad y estiramientos (10 min)", "Cardio Z1 (20 min)"],
+                    domingo: ["Descanso o cardio ligero (10-15 min)", "Movilidad (opcional)"]
+                }
+            },
+            2: {
+                info: {
+                    title: "Semana 2 – Progresión Moderada",
+                    desc: "Aumentando ligeramente la intensidad con más repeticiones o resistencia. Mantener técnica adecuada y control."
+                },
+                days: {
+                    lunes: ["Elevación pierna recta (3x12, peso ligero)", "Puente glúteos (3x12, sostener 1s)", "Clamshell (3x15, banda ligera)", "Movilidad (10 min)", "Cardio Z1 (15-20 min)"],
+                    martes: ["Sentadillas parciales (3x12, hacia 60°)", "Step-up (3x12/pierna, escalón más alto)", "Balance ojos abiertos/cerrados (3x30s)", "Movilidad (10 min)", "Cardio Z1 (20 min)"],
+                    miercoles: ["Elevación pierna recta (3x15)", "Puente glúteos (3x15, variante 1 pierna)", "Clamshell (3x15, pausa 1s)", "Plancha frontal (3x30s)", "Movilidad (5-10 min)", "Cardio Z1 (15-20 min)"],
+                    jueves: ["Sentadillas parciales (3x12-15)", "Step-up (3x12/pierna, mancuernas)", "Desplazamiento lateral (3x10 pasos)", "Plancha lateral (3x20s/lado)", "Movilidad (10 min)", "Cardio Z1 (20 min)"],
+                    viernes: ["Elevación pierna recta (3x15, +0.5kg)", "Puente glúteos (3x15)", "Clamshell (3x15-20)", "Movilidad (5+ min)", "Cardio Z1 (15 min)"],
+                    sabado: ["Sentadillas parciales (3x15)", "Step-up (3x15/pierna)", "Balanza en un pie (3x5/pierna)", "Movilidad y estiramientos (10+ min)", "Cardio Z1 (20-25 min)"],
+                    domingo: ["Descanso activo", "Movilidad (opcional)"]
+                }
+            },
+            3: {
+                info: {
+                    title: "Semana 3 – Fuerza y Estabilidad Progresiva",
+                    desc: "Progresión en fuerza con variantes más desafiantes: puentes unilaterales, sentadillas más profundas, balance avanzado."
+                },
+                days: {
+                    lunes: ["Elevación pierna recta (3x15+, lateral)", "Puente glúteos 1 pierna (2x10/lado)", "Clamshell (3x15+, banda fuerte)", "Movilidad (10 min)", "Cardio Z1 (20 min)"],
+                    martes: ["Sentadillas parciales (3x15, hasta 60-70°)", "Step-up altura media (3x15/pierna)", "Balance superficie inestable (3x30s)", "Movilidad (10 min)", "Cardio Z1 (20-25 min)"],
+                    miercoles: ["Elevación pierna recta (3x15)", "Puente glúteos (3x15, bilateral+unilateral)", "Clamshell (3x15-20)", "Plancha frontal (3x30-40s)", "Movilidad (5-10 min)", "Cardio Z1 (15-20 min)"],
+                    jueves: ["Sentadillas parciales (3x15)", "Step-up (3x15, bajada 3-4s)", "Paso y balance con conos (2 rondas)", "Plancha lateral completa (3x30s)", "Movilidad (10+ min)", "Cardio Z1 (25 min)"],
+                    viernes: ["Elevación pierna recta (3x15+)", "Puente glúteos (3x15+, tensión continua)", "Clamshell (3x20)", "Movilidad (5 min)", "Cardio Z1 (15-20 min)"],
+                    sabado: ["Sentadillas parciales/completas (3x15)", "Step-up (3x15, ritmo aumentado)", "Balance desafío final (circuito)", "Movilidad y estiramientos (15 min)", "Cardio Z1 (20-30 min)"],
+                    domingo: ["Descanso activo", "Foam rolling (opcional)"]
+                }
+            },
+            4: {
+                info: {
+                    title: "Semana 4 – Consolidación y Preparación Final",
+                    desc: "Consolidación de logros. Máximas repeticiones toleradas. Preparación para transición a programa de mantenimiento."
+                },
+                days: {
+                    lunes: ["Elevación pierna recta (3x15-20)", "Puente glúteos (3x15-20, 1 pierna)", "Clamshell (3x20+, mantener 2s)", "Movilidad (10 min, sentadilla profunda)", "Cardio Z1 (20 min, períodos Z2)"],
+                    martes: ["Sentadillas funcionales (3x15)", "Step-up avanzado (3x15, rodilla arriba)", "Circuito equilibrio completo (2 rondas)", "Movilidad (10 min)", "Cardio Z1 (25 min)"],
+                    miercoles: ["Elevación pierna recta (3x20, máxima calidad)", "Puente glúteos (3x20, último 10s)", "Clamshell (3x20, técnica perfecta)", "Plancha frontal (máximo tiempo)", "Movilidad (5-10 min, yoga)", "Cardio Z1 (15-20 min)"],
+                    jueves: ["Sentadillas (3x15, forma perfecta)", "Step-up (3x15, controlado)", "Balance dinámico con pelota (1 min)", "Plancha lateral (2x30+s)", "Movilidad (10 min)", "Cardio Z1 (20-30 min)"],
+                    viernes: ["Evaluación final - Sentadilla completa", "Caminar 30 min continuo", "Subir 2 tramos escaleras", "Ejercicios favoritos (1 serie c/u)", "Movilidad libre (yoga)", "Cardio Z1 (15 min celebración)"],
+                    sabado: ["Descanso activo", "Transición a nuevo plan"],
+                    domingo: ["Descanso", "Reconocer logro 4 semanas"]
+                }
+            }
+        };
+
+        let currentWeek = 1;
+        let state = {};
+
+        function init() {
+            for (let i = 1; i <= 4; i++) {
+                const btn = document.createElement('button');
+                btn.className = 'week-btn' + (i === 1 ? ' active' : '');
+                btn.textContent = `Semana ${i}`;
+                btn.onclick = () => selectWeek(i);
+                document.getElementById('weekSelector').appendChild(btn);
+            }
+            loadState();
+            renderWeek();
+        }
+
+        function selectWeek(week) {
+            currentWeek = week;
+            document.querySelectorAll('.week-btn').forEach((btn, idx) => {
+                btn.classList.toggle('active', idx + 1 === week);
+            });
+            renderWeek();
+        }
+
+        function getDayNutrition(dayIndex) {
+            return nutritionData[dayIndex] || nutritionData[1];
+        }
+
+        function renderWeek() {
+            const data = weekData[currentWeek];
+            const dayNames = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo'];
+            const dayLabels = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+            const dayIndices = [1, 2, 3, 4, 5, 6, 0];
+            
+            let html = `
+                <div class="week-info">
+                    <h2>${data.info.title}</h2>
+                    <p>${data.info.desc}</p>
+                </div>
+            `;
+            
+            dayNames.forEach((day, idx) => {
+                const exercises = data.days[day] || [];
+                const nutrition = getDayNutrition(dayIndices[idx]);
+                
+                html += `
+                    <div class="day-card">
+                        <div class="day-header" onclick="toggleDay('${day}')">
+                            <div class="day-title">${dayLabels[idx]}</div>
+                            <div class="day-icon" id="icon-${day}">▼</div>
+                        </div>
+                        <div class="day-content" id="content-${day}">
+                            
+                            <div class="section-tabs">
+                                <div class="section-tab active" onclick="switchSection(event, '${day}', 'movilidad')">
+                                    💪 Movilidad
+                                </div>
+                                <div class="section-tab" onclick="switchSection(event, '${day}', 'nutricion')">
+                                    🍽️ Nutrición
+                                </div>
+                                <div class="section-tab" onclick="switchSection(event, '${day}', 'suplementos')">
+                                    💊 Suplementos
+                                </div>
+                            </div>
+
+                            <div class="section-content active" id="section-movilidad-${day}">
+                                ${exercises.map((ex, i) => {
+                                    const id = `w${currentWeek}_${day}_${i}`;
+                                    const descId = `desc_${id}`;
+                                    const desc = getDescription(ex);
+                                    return `
+                                        <div class="exercise-item">
+                                            <div class="exercise-header" onclick="toggleExerciseDesc('${descId}', event)">
+                                                <input type="checkbox" class="checkbox" id="${id}" 
+                                                    ${state[id] ? 'checked' : ''} 
+                                                    onclick="event.stopPropagation()"
+                                                    onchange="updateState('${id}', this.checked)">
+                                                <div class="exercise-text">${ex}</div>
+                                                <div class="expand-icon" id="icon_${descId}">ℹ️</div>
+                                            </div>
+                                            <div class="exercise-desc" id="${descId}">
+                                                <div class="exercise-desc-content">
+                                                    <div class="desc-label">Descripción:</div>
+                                                    ${desc}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    `;
+                                }).join('')}
+                            </div>
+
+                            <div class="section-content" id="section-nutricion-${day}">
+                                ${nutrition.meals.map((meal, mealIdx) => `
+                                    <div class="nutrition-section">
+                                        <div class="nutrition-time">
+                                            <input type="checkbox" class="checkbox" id="meal_w${currentWeek}_${day}_${mealIdx}" 
+                                                ${state['meal_w' + currentWeek + '_' + day + '_' + mealIdx] ? 'checked' : ''} 
+                                                onchange="updateState('meal_w${currentWeek}_${day}_${mealIdx}', this.checked)">
+                                            🕐 ${meal.time} (~${meal.cal} kcal)
+                                        </div>
+                                        ${meal.items.map(item => `
+                                            <div class="nutrition-item">
+                                                <span class="nutrition-food">${item.food}</span>
+                                                <span class="nutrition-cal">~${item.cal} kcal</span>
+                                            </div>
+                                        `).join('')}
+                                    </div>
+                                `).join('')}
+                                <div class="nutrition-total">
+                                    <span>Total diario</span>
+                                    <span>~${nutrition.total} kcal</span>
+                                </div>
+                                <div style="margin-top:10px; padding:10px; background:#141414; border-radius:6px; font-size:12px; color:#9ca3af;">
+                                    💡 ${nutrition.note}
+                                </div>
+                            </div>
+
+                            <div class="section-content" id="section-suplementos-${day}">
+                                <ul class="supplement-list">
+                                    <li class="supplement-item">
+                                        <input type="checkbox" class="checkbox" id="supp_w${currentWeek}_${day}_0" 
+                                            ${state['supp_w' + currentWeek + '_' + day + '_0'] ? 'checked' : ''} 
+                                            onchange="updateState('supp_w${currentWeek}_${day}_0', this.checked)">
+                                        <span class="supplement-icon">💪</span>
+                                        <span>Proteína</span>
+                                    </li>
+                                    <li class="supplement-item">
+                                        <input type="checkbox" class="checkbox" id="supp_w${currentWeek}_${day}_1" 
+                                            ${state['supp_w' + currentWeek + '_' + day + '_1'] ? 'checked' : ''} 
+                                            onchange="updateState('supp_w${currentWeek}_${day}_1', this.checked)">
+                                        <span class="supplement-icon">⚡</span>
+                                        <span>Creatina</span>
+                                    </li>
+                                    <li class="supplement-item">
+                                        <input type="checkbox" class="checkbox" id="supp_w${currentWeek}_${day}_2" 
+                                            ${state['supp_w' + currentWeek + '_' + day + '_2'] ? 'checked' : ''} 
+                                            onchange="updateState('supp_w${currentWeek}_${day}_2', this.checked)">
+                                        <span class="supplement-icon">🌟</span>
+                                        <span>Vitaminas</span>
+                                    </li>
+                                    <li class="supplement-item">
+                                        <input type="checkbox" class="checkbox" id="supp_w${currentWeek}_${day}_3" 
+                                            ${state['supp_w' + currentWeek + '_' + day + '_3'] ? 'checked' : ''} 
+                                            onchange="updateState('supp_w${currentWeek}_${day}_3', this.checked)">
+                                        <span class="supplement-icon">🦴</span>
+                                        <span>Colágeno</span>
+                                    </li>
+                                    <li class="supplement-item">
+                                        <input type="checkbox" class="checkbox" id="supp_w${currentWeek}_${day}_4" 
+                                            ${state['supp_w' + currentWeek + '_' + day + '_4'] ? 'checked' : ''} 
+                                            onchange="updateState('supp_w${currentWeek}_${day}_4', this.checked)">
+                                        <span class="supplement-icon">💧</span>
+                                        <span>Agua (2-3L diarios)</span>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <textarea class="notes-area" placeholder="Observaciones del día..." 
+                                id="note_w${currentWeek}_${day}" 
+                                onchange="saveNote('note_w${currentWeek}_${day}', this.value)">${state['note_w' + currentWeek + '_' + day] || ''}</textarea>
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += `
+                <div class="week-notes">
+                    <strong>📝 Notas de la Semana ${currentWeek}</strong>
+                    <textarea id="weeknote_${currentWeek}" 
+                        onchange="saveNote('weeknote_${currentWeek}', this.value)"
+                        placeholder="Resumen de la semana...">${state['weeknote_' + currentWeek] || ''}</textarea>
+                </div>
+            `;
+
+            document.getElementById('weekContent').innerHTML = html;
+            updateProgress();
+        }
+
+        function switchSection(ev, day, section) {
+            document.querySelectorAll(`#content-${day} .section-tab`).forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll(`#content-${day} .section-content`).forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            ev.target.classList.add('active');
+            document.getElementById(`section-${section}-${day}`).classList.add('active');
+        }
+
+        function toggleDay(day) {
+            const content = document.getElementById(`content-${day}`);
+            const icon = document.getElementById(`icon-${day}`);
+            content.classList.toggle('open');
+            icon.style.transform = content.classList.contains('open') ? 'rotate(180deg)' : 'rotate(0deg)';
+        }
+
+        function toggleExerciseDesc(descId, event) {
+            event.stopPropagation();
+            const desc = document.getElementById(descId);
+            const icon = document.getElementById(`icon_${descId}`);
+            desc.classList.toggle('open');
+            icon.textContent = desc.classList.contains('open') ? '✖️' : 'ℹ️';
+        }
+
+        function updateState(id, checked) {
+            state[id] = checked;
+            saveState();
+            updateProgress();
+        }
+
+        function saveNote(id, value) {
+            state[id] = value;
+            saveState();
+        }
+
+        function updateProgress() {
+            const checkboxes = document.querySelectorAll('.checkbox');
+            let total = 0, checked = 0;
+            checkboxes.forEach(cb => {
+                total++;
+                if (cb.checked) checked++;
+            });
+            const percent = total > 0 ? Math.round((checked / total) * 100) : 0;
+            document.getElementById('progressBar').style.width = percent + '%';
+            document.getElementById('completedCount').textContent = checked;
+            document.getElementById('progressPercent').textContent = percent + '%';
+        }
+
+        function saveState() {
+            localStorage.setItem('kneeRecovery', JSON.stringify(state));
+        }
+
+        function loadState() {
+            const saved = localStorage.getItem('kneeRecovery');
+            if (saved) state = JSON.parse(saved);
+        }
+
+        init();
+    </script>
+</body>
+</html>
