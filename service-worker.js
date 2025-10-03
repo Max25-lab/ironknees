@@ -1,4 +1,4 @@
-const CACHE_NAME = 'iron-knees-fix-v1';
+const CACHE_NAME = 'iron-knees-v4';
 const ASSETS = [
   '/ironknees/',
   '/ironknees/index.html',
