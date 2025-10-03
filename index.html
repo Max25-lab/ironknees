@@ -1029,7 +1029,10 @@
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', async () => {
     try {
-      const reg = await navigator.serviceWorker.register('./service-worker.js', { scope: './' });
+      // En GitHub Pages tu sitio vive bajo /ironknees/
+      const reg = await navigator.serviceWorker.register('/ironknees/service-worker.js', {
+        scope: '/ironknees/'
+      });
       console.log('✅ SW registered:', reg.scope);
     } catch (err) {
       console.error('❌ SW registration failed:', err);
