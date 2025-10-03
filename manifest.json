@@ -1,6 +1,8 @@
 {
   "name": "Rodillas de Hierro",
   "short_name": "IronKnees",
+  "description": "Programa profesional de recuperación y rendimiento de rodillas.",
+  "id": "/ironknees/",
   "start_url": "/ironknees/index.html",
   "scope": "/ironknees/",
   "display": "standalone",
@@ -24,5 +26,10 @@
       "type": "image/png",
       "purpose": "maskable"
     }
+  ],
+  "categories": [
+    "health",
+    "fitness",
+    "sports"
   ]
 }
